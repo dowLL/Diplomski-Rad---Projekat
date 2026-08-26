@@ -1,10 +1,30 @@
+import { Routes, Route } from 'react-router-dom'
+
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
+
+import Home from './pages/Home'
+import Attractions from './pages/Attractions'
+import Tours from './pages/Tours'
+import TravelGuide from './pages/travelGuide'
+import GiftShop from './pages/giftShop'
+
 function App() {
-    return (
-        <div>
-            <h1>Barcelona Tourism</h1>
-            <p>Discover the beauty of Barcelona.</p>
-        </div>
-    );
+  return (
+    <>
+      <Navbar />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/attractions" element={<Attractions />} />
+        <Route path="/tours" element={<Tours />} />
+        <Route path="/guide" element={<TravelGuide />} />
+        <Route path="/shop" element={<GiftShop />} />
+      </Routes>
+
+      <Footer />
+    </>
+  )
 }
 
-export default App;
+export default App
