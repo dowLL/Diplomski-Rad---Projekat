@@ -6,8 +6,8 @@ import Footer from './components/Footer'
 import Home from './pages/Home'
 import Attractions from './pages/Attractions'
 import Tours from './pages/Tours'
-import TravelGuide from './pages/travelGuide'
-import GiftShop from './pages/giftShop'
+import TravelGuide from './pages/TravelGuide'
+import GiftShop from './pages/GiftShop'
 
 function App() {
   return (
