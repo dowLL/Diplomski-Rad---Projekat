@@ -188,3 +188,228 @@
     display: none;
   }
 }
+
+.featured {
+  padding: 6rem 7%;
+  background-color: #f7f3ed;
+  color: #17211c;
+}
+
+.featured__header {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.featured__eyebrow {
+  margin: 0 0 0.75rem;
+  color: #b45132;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.featured__title {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.featured__link {
+  padding-bottom: 0.3rem;
+  color: #17211c;
+  border-bottom: 1px solid #17211c;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.featured__grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.attraction-card {
+  position: relative;
+  overflow: hidden;
+  color: #ffffff;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 420px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #d8c4ab;
+  transition: transform 0.3s ease;
+}
+
+.attraction-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 24, 40, 0.12) 0%,
+    rgba(15, 24, 40, 0.82) 100%
+  );
+}
+
+.attraction-card__number,
+.attraction-card__content {
+  position: relative;
+  z-index: 1;
+}
+
+.attraction-card:hover {
+  transform: translateY(-8px);
+}
+
+.attraction-card__number {
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+}
+
+.attraction-card__content p {
+  margin-bottom: 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.attraction-card__content h3 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+  font-weight: 500;
+}
+
+.attraction-card__content span {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .featured {
+    padding: 4rem 1.25rem;
+  }
+
+  .featured__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .featured__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .attraction-card {
+    min-height: 320px;
+  }
+}
+
+.tours-promo {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  min-height: 650px;
+  background-color: #17233c;
+  color: #ffffff;
+}
+
+.tours-promo__image {
+  min-height: 650px;
+  overflow: hidden;
+}
+
+.tours-promo__image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.tours-promo__content {
+  padding: 6rem clamp(2rem, 6vw, 6rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.tours-promo__eyebrow {
+  margin: 0 0 1.5rem;
+  color: #f3b93f;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.tours-promo__title {
+  max-width: 550px;
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.tours-promo__description {
+  max-width: 500px;
+  margin: 2rem 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.tours-promo__button {
+  min-height: 54px;
+  margin-top: 2.5rem;
+  padding: 0 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background-color: #f3b93f;
+  color: #17233c;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.tours-promo__button:hover {
+  background-color: #ffffff;
+  transform: translateY(-3px);
+}
+
+@media (max-width: 850px) {
+  .tours-promo {
+    grid-template-columns: 1fr;
+  }
+
+  .tours-promo__image {
+    min-height: 420px;
+  }
+
+  .tours-promo__content {
+    padding: 4rem 1.5rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .tours-promo__image {
+    min-height: 320px;
+  }
+
+  .tours-promo__title {
+    font-size: 2.5rem;
+  }
+}
