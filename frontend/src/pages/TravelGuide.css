@@ -1,0 +1,462 @@
+.travel-guide {
+  background: #f5f1e8;
+  color: #17231d;
+}
+
+.guide-eyebrow {
+  margin: 0 0 16px;
+  color: #b9633f;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.guide-hero {
+  position: relative;
+  min-height: 86vh;
+  display: flex;
+  align-items: center;
+  padding: 140px 7% 90px;
+  background-position: center;
+  background-size: cover;
+}
+
+.guide-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(10, 23, 17, 0.88), rgba(10, 23, 17, 0.2)),
+    linear-gradient(0deg, rgba(10, 23, 17, 0.35), transparent);
+}
+
+.guide-hero__content {
+  position: relative;
+  z-index: 1;
+  width: min(680px, 100%);
+  color: #fff;
+}
+
+.guide-hero__content h1 {
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: clamp(3.5rem, 8vw, 7.2rem);
+  font-weight: 400;
+  line-height: 0.94;
+}
+
+.guide-hero__content h1 span {
+  display: block;
+  color: #e9b181;
+  font-style: italic;
+}
+
+.guide-hero__content > p:not(.guide-eyebrow) {
+  max-width: 590px;
+  margin: 28px 0 34px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 1.08rem;
+  line-height: 1.8;
+}
+
+.guide-hero__button,
+.guide-cta a,
+.tickets-section a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 24px;
+  background: #b9633f;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background 180ms ease,
+    transform 180ms ease;
+}
+
+.guide-hero__button:hover,
+.guide-cta a:hover,
+.tickets-section a:hover {
+  background: #994b2e;
+  transform: translateY(-2px);
+}
+
+.guide-essentials,
+.visit-season,
+.travel-tips {
+  padding: 110px 7%;
+}
+
+.guide-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 60px;
+  margin-bottom: 50px;
+}
+
+.guide-section-heading h2,
+.getting-around h2,
+.guide-map-section h2,
+.travel-tips h2,
+.tickets-section h2,
+.guide-cta h2 {
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.guide-section-heading > p {
+  max-width: 500px;
+  margin: 0;
+  color: #667169;
+  line-height: 1.8;
+}
+
+.essentials-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid #cfc8ba;
+  border-left: 1px solid #cfc8ba;
+}
+
+.essential-card {
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 30px;
+  border-right: 1px solid #cfc8ba;
+  border-bottom: 1px solid #cfc8ba;
+}
+
+.essential-card strong {
+  margin-bottom: 12px;
+  font-family: Georgia, serif;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  font-weight: 400;
+}
+
+.essential-card span {
+  color: #797f78;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.getting-around {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 80px;
+  padding: 110px 7%;
+  background: #15251d;
+  color: #fff;
+}
+
+.getting-around__intro {
+  position: sticky;
+  top: 130px;
+  align-self: start;
+}
+
+.getting-around__intro > p:last-child {
+  max-width: 500px;
+  margin: 28px 0 0;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.8;
+}
+
+.transport-list {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.transport-card {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 20px;
+  padding: 32px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.transport-card__number {
+  color: #e9b181;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+}
+
+.transport-card h3 {
+  margin: 0 0 12px;
+  font-family: Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+
+.transport-card p {
+  max-width: 620px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.62);
+  line-height: 1.7;
+}
+
+.visit-season {
+  background: #ede7dc;
+}
+
+.season-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.season-card {
+  min-height: 310px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 30px;
+  background: #f8f5ee;
+  border-top: 4px solid #b9633f;
+}
+
+.season-card > p {
+  margin: 0 0 auto;
+  color: #b9633f;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.season-card h3 {
+  margin: 0 0 16px;
+  font-family: Georgia, serif;
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+.season-card span {
+  color: #687069;
+  line-height: 1.7;
+}
+
+.guide-map-section {
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+  min-height: 680px;
+  background: #15251d;
+  color: #fff;
+}
+
+.guide-map-section__content {
+  padding: 90px 9%;
+}
+
+.guide-map-section__content > p:not(.guide-eyebrow) {
+  margin: 25px 0 36px;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.8;
+}
+
+.guide-map-section ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guide-map-section li {
+  display: flex;
+  gap: 18px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.guide-map-section li span {
+  color: #e9b181;
+  font-size: 0.75rem;
+}
+
+.travel-map {
+  min-height: 680px;
+}
+
+.travel-map .leaflet-container {
+  width: 100%;
+  height: 100%;
+  min-height: 680px;
+  font-family: inherit;
+}
+
+.travel-map__marker {
+  background: transparent;
+  border: 0;
+}
+
+.travel-map__marker span {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 28px;
+  background: #b9633f;
+  border: 4px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transform: rotate(-45deg);
+}
+
+.leaflet-popup-content strong {
+  color: #17231d;
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+}
+
+.leaflet-popup-content p {
+  max-width: 220px;
+  margin: 8px 0 0;
+  color: #667169;
+  line-height: 1.5;
+}
+
+.travel-tips__heading {
+  max-width: 700px;
+  margin-bottom: 48px;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.tip-card {
+  min-height: 180px;
+  padding: 27px;
+  background: #fff;
+  border: 1px solid #ddd5c7;
+}
+
+.tip-card span {
+  color: #b9633f;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.tip-card p {
+  margin: 35px 0 0;
+  color: #344139;
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.tickets-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  padding: 100px 7%;
+  background: #e3ab7b;
+}
+
+.tickets-section__content p {
+  margin: 0 0 30px;
+  color: #3d3e36;
+  line-height: 1.8;
+}
+
+.guide-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 90px 7%;
+  background: #fff;
+}
+
+@media (max-width: 1000px) {
+  .essentials-grid,
+  .season-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .getting-around,
+  .guide-map-section {
+    grid-template-columns: 1fr;
+  }
+
+  .getting-around__intro {
+    position: static;
+  }
+
+  .guide-map-section__content {
+    padding: 80px 7%;
+  }
+
+  .travel-map,
+  .travel-map .leaflet-container {
+    min-height: 520px;
+  }
+}
+
+@media (max-width: 760px) {
+  .guide-hero {
+    min-height: 78vh;
+    padding: 120px 6% 70px;
+  }
+
+  .guide-essentials,
+  .visit-season,
+  .travel-tips {
+    padding: 75px 6%;
+  }
+
+  .guide-section-heading,
+  .guide-cta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .getting-around {
+    gap: 50px;
+    padding: 75px 6%;
+  }
+
+  .tips-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tickets-section {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    padding: 75px 6%;
+  }
+
+  .guide-cta {
+    padding: 70px 6%;
+  }
+}
+
+@media (max-width: 520px) {
+  .essentials-grid,
+  .season-grid,
+  .tips-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .essential-card {
+    min-height: 140px;
+  }
+
+  .transport-card {
+    grid-template-columns: 45px 1fr;
+  }
+
+  .travel-map,
+  .travel-map .leaflet-container {
+    min-height: 430px;
+  }
+
+  .guide-map-section__content {
+    padding: 65px 6%;
+  }
+}
