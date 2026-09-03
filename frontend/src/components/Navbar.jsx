@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import './Navbar.css'
 
-function Navbar() {
+function Navbar({ cartCount }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   function closeMenu() {
@@ -25,9 +25,9 @@ function Navbar() {
           <Link to="/shop">Gift Shop</Link>
         </nav>
 
-        <Link className="navbar__cta" to="/attractions">
-          Start exploring
-          <span aria-hidden="true">↗</span>
+        <Link className="navbar__cta" to="/cart">
+          Cart ({cartCount})
+          <span aria-hidden="true">→</span>
         </Link>
 
         <button
@@ -65,6 +65,10 @@ function Navbar() {
 
         <Link to="/shop" onClick={closeMenu}>
           Gift Shop
+        </Link>
+
+        <Link to="/cart" onClick={closeMenu}>
+          Cart ({cartCount})
         </Link>
       </nav>
     </header>
