@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import heroImage from '../assets/images/attractions-hero.jpg'
@@ -8,44 +8,55 @@ import gothicQuarterImage from '../assets/images/gothic-quarter.jpg'
 import campNouImage from '../assets/images/camp-nou.jpg'
 import './Attractions.css'
 
-const attractions = [
-  {
-    id: 1,
-    name: 'Sagrada Família',
-    category: 'Architecture',
-    location: 'Eixample',
-    description: 'Gaudí’s unfinished masterpiece and Barcelona’s most iconic landmark.',
-    image: sagradaImage,
-  },
-  {
-    id: 2,
-    name: 'Park Güell',
-    category: 'Parks',
-    location: 'Gràcia',
-    description: 'Colourful mosaics, playful architecture and panoramic city views.',
-    image: parkGuellImage,
-  },
-  {
-    id: 3,
-    name: 'Gothic Quarter',
-    category: 'Historic',
-    location: 'Ciutat Vella',
-    description: 'A maze of medieval streets, hidden squares and centuries of history.',
-    image: gothicQuarterImage,
-  },
-  {
-    id: 4,
-    name: 'Barcelona Viewpoints',
-    category: 'Viewpoints',
-    location: 'Across the city',
-    description: 'See Barcelona from above and discover a new side of the city skyline.',
-    image: heroImage,
-  },
-]
-
-const categories = ['All', ...new Set(attractions.map(({ category }) => category))]
+const attractionImages = {
+  'sagrada-familia.jpg': sagradaImage,
+  'park-guell.jpg': parkGuellImage,
+  'gothic-quarter.jpg': gothicQuarterImage,
+  'attractions-hero.jpg': heroImage,
+}
 
 function Attractions() {
+  const [attractions, setAttractions] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    async function loadAttractions() {
+      try {
+        const response = await fetch(
+          'http://localhost:3000/api/attractions',
+          { signal: controller.signal },
+        )
+
+        if (!response.ok) {
+          throw new Error('Failed to load attractions.')
+        }
+
+        const data = await response.json()
+        setAttractions(data)
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          setError('Unable to load attractions. Please try again later.')
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadAttractions()
+
+    return () => controller.abort()
+  }, [])
+
+  const categories = [
+    'All',
+    ...new Set(attractions.map(({ category }) => category)),
+  ]
+  
   const [searchTerm, setSearchTerm] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
 
@@ -61,7 +72,7 @@ function Attractions() {
 
       return matchesCategory && matchesSearch
     })
-  }, [activeCategory, searchTerm])
+  }, [attractions, activeCategory, searchTerm])
 
   return (
     <main className="attractions-page">
@@ -112,12 +123,12 @@ function Attractions() {
           ))}
         </div>
 
-        {filteredAttractions.length > 0 ? (
+        {isLoading ? (<p>Loading attractions...</p>) : error ? (<p role="alert">{error}</p>) : filteredAttractions.length > 0 ? (
           <div className="attractions-grid">
             {filteredAttractions.map((attraction, index) => (
               <article className="attractions-card" key={attraction.id}>
                 <div className="attractions-card__image">
-                  <img src={attraction.image} alt={attraction.name} />
+                  <img src={attractionImages[attraction.image]} alt={attraction.name}/>
                   <span>{String(index + 1).padStart(2, '0')}</span>
                 </div>
 

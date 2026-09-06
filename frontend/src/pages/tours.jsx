@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import heroImage from '../assets/images/barcelona-tour.jpg'
 import busImage from '../assets/images/barcelona-hero.jpg'
@@ -9,97 +9,63 @@ import coastImage from '../assets/images/attractions-hero.jpg'
 
 import './Tours.css'
 
-const tours = [
-  {
-    id: 1,
-    title: 'Barcelona Hop-On Hop-Off',
-    category: 'Bus Tours',
-    duration: '24 or 48 hours',
-    meetingPoint: 'Multiple stops across Barcelona',
-    price: 33,
-    rating: '4.7',
-    image: busImage,
-    featured: true,
-    description:
-      'Explore Barcelona at your own pace with unlimited rides and stops near the city’s most famous landmarks.',
-    highlights: ['Two panoramic routes', 'Audio guide included', 'Free Wi-Fi'],
-  },
-  {
-    id: 2,
-    title: 'Gaudí Masterpieces Tour',
-    category: 'Architecture',
-    duration: '4 hours',
-    meetingPoint: 'Sagrada Família',
-    price: 59,
-    rating: '4.9',
-    image: gaudiImage,
-    description:
-      'Discover Gaudí’s extraordinary imagination through Sagrada Família, Park Güell and the streets of Eixample.',
-    highlights: ['Local expert guide', 'Priority entrance', 'Small group'],
-  },
-  {
-    id: 3,
-    title: 'Park Güell & Gràcia Walk',
-    category: 'Walking Tours',
-    duration: '3 hours',
-    meetingPoint: 'Lesseps Square',
-    price: 39,
-    rating: '4.8',
-    image: parkImage,
-    description:
-      'Walk through colourful Park Güell before discovering the relaxed squares and local character of Gràcia.',
-    highlights: ['Park entry included', 'Local neighbourhoods', 'Photo stops'],
-  },
-  {
-    id: 4,
-    title: 'Secrets of the Gothic Quarter',
-    category: 'Walking Tours',
-    duration: '2.5 hours',
-    meetingPoint: 'Barcelona Cathedral',
-    price: 29,
-    rating: '4.9',
-    image: gothicImage,
-    description:
-      'Follow medieval streets, hidden courtyards and ancient Roman walls through Barcelona’s oldest quarter.',
-    highlights: ['Historic stories', 'Hidden locations', 'Small group'],
-  },
-  {
-    id: 5,
-    title: 'Barcelona Coast & Sunset',
-    category: 'Boat Tours',
-    duration: '2 hours',
-    meetingPoint: 'Port Olímpic',
-    price: 45,
-    rating: '4.8',
-    image: coastImage,
-    description:
-      'See the Barcelona skyline from the Mediterranean and enjoy a relaxed sunset cruise along the city coast.',
-    highlights: ['Sunset sailing', 'Welcome drink', 'Skyline views'],
-  },
-  {
-    id: 6,
-    title: 'Barcelona Highlights Express',
-    category: 'Bus Tours',
-    duration: '3.5 hours',
-    meetingPoint: 'Plaça de Catalunya',
-    price: 42,
-    rating: '4.6',
-    image: heroImage,
-    description:
-      'Visit Barcelona’s essential landmarks on a comfortable guided journey designed for travellers with limited time.',
-    highlights: ['Central departure', 'Live guide', 'Major landmarks'],
-  },
-]
+const tourImages = {
+  'barcelona-hero.jpg': busImage,
+  'sagrada-familia.jpg': gaudiImage,
+  'park-guell.jpg': parkImage,
+  'gothic-quarter.jpg': gothicImage,
+  'attractions-hero.jpg': coastImage,
+  'barcelona-tour.jpg': heroImage,
+}
 
-const categories = [
-  'All Tours',
-  ...new Set(tours.map(({ category }) => category)),
-]
+
 
 function Tours() {
+  const [tours, setTours] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
   const [activeCategory, setActiveCategory] = useState('All Tours')
-  const [selectedTour, setSelectedTour] = useState(tours[0].title)
+  const [selectedTour, setSelectedTour] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    async function loadTours() {
+      try {
+        const response = await fetch(
+          'http://localhost:3000/api/tours',
+          { signal: controller.signal },
+        )
+
+        if (!response.ok) {
+          throw new Error('Failed to load tours.')
+        }
+
+        const data = await response.json()
+
+        setTours(data)
+        setSelectedTour(data[0]?.title ?? '')
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          setError('Unable to load tours. Please try again later.')
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadTours()
+
+    return () => controller.abort()
+  }, [])
+
+  const categories = [
+    'All Tours',
+    ...new Set(tours.map(({ category }) => category)),
+  ]
 
   const filteredTours = useMemo(() => {
     if (activeCategory === 'All Tours') {
@@ -107,7 +73,7 @@ function Tours() {
     }
 
     return tours.filter(({ category }) => category === activeCategory)
-  }, [activeCategory])
+  }, [tours, activeCategory])  
 
   function openBooking(tourTitle) {
     setSelectedTour(tourTitle)
@@ -178,6 +144,14 @@ function Tours() {
           ))}
         </div>
 
+        {isLoading && <p>Loading tours...</p>}
+
+        {error && <p role="alert">{error}</p>}
+
+        {!isLoading && !error && tours.length === 0 && (
+          <p>No tours available.</p>
+        )}
+
         <div className="tours-grid">
           {filteredTours.map((tour) => (
             <article
@@ -185,7 +159,7 @@ function Tours() {
               key={tour.id}
             >
               <div className="tour-card__image">
-                <img src={tour.image} alt={tour.title} />
+                <img src={tourImages[tour.image]} alt={tour.title} />
 
                 {tour.featured && (
                   <span className="tour-card__badge">MOST POPULAR</span>
@@ -366,7 +340,11 @@ function Tours() {
             />
           </label>
 
-          <button className="booking-form__button" type="submit">
+          <button
+            className="booking-form__button"
+            type="submit"
+            disabled={isLoading || Boolean(error) || tours.length === 0}
+          >
             Send booking request →
           </button>
 
