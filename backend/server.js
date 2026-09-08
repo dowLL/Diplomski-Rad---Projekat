@@ -18,6 +18,12 @@ app.get('/api/attractions', (req, res) => {
   res.json(attractions)
 })
 
+app.get('/api/products', (req, res) => {
+  const products = db.prepare('SELECT * FROM products ORDER BY id').all()
+
+  res.json(products)
+})
+
 app.get('/api/tours', (req, res) => {
   const rows = db.prepare('SELECT * FROM tours ORDER BY id').all()
 

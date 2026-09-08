@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import hoodieImage from '../assets/images/shop/barcelona-hoodie.jpg'
 import mapImage from '../assets/images/shop/barcelona-map.jpg'
@@ -11,72 +11,65 @@ import miniatureImage from '../assets/images/shop/sagrada-miniature.jpg'
 
 import './GiftShop.css'
 
-const products = [
-  {
-    id: 1,
-    name: 'Sagrada Família Miniature',
-    category: 'Souvenirs',
-    price: 24,
-    image: miniatureImage,
-  },
-  {
-    id: 2,
-    name: 'Barcelona Postcard Set',
-    category: 'Souvenirs',
-    price: 9,
-    image: postcardImage,
-  },
-  {
-    id: 3,
-    name: 'Illustrated Barcelona Map',
-    category: 'Art & Prints',
-    price: 16,
-    image: mapImage,
-  },
-  {
-    id: 4,
-    name: 'Barcelona Travel Poster',
-    category: 'Art & Prints',
-    price: 22,
-    image: posterImage,
-  },
-  {
-    id: 5,
-    name: 'Barcelona Canvas Tote',
-    category: 'Accessories',
-    price: 18,
-    image: toteImage,
-  },
-  {
-    id: 6,
-    name: 'Barcelona City T-Shirt',
-    category: 'Clothing',
-    price: 27,
-    image: shirtImage,
-  },
-  {
-    id: 7,
-    name: 'Barcelona Hoodie',
-    category: 'Clothing',
-    price: 49,
-    image: hoodieImage,
-  },
-  {
-    id: 8,
-    name: 'FC Barcelona Scarf',
-    category: 'Accessories',
-    price: 21,
-    image: scarfImage,
-  },
-]
-
-const categories = [
-  'All',
-  ...new Set(products.map((product) => product.category)),
-]
+const productImages = {
+  'sagrada-miniature.jpg': miniatureImage,
+  'barcelona-postcard.jpg': postcardImage,
+  'barcelona-map.jpg': mapImage,
+  'barcelona-poster.jpg': posterImage,
+  'barcelona-tote.jpg': toteImage,
+  'barcelona-shirt.jpg': shirtImage,
+  'barcelona-hoodie.jpg': hoodieImage,
+  'barcelona-scarf.jpg': scarfImage,
+}
 
 function GiftShop({ cart, addToCart }) {
+  const [products, setProducts] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    async function loadProducts() {
+      try {
+        const response = await fetch(
+          'http://localhost:3000/api/products',
+          { signal: controller.signal },
+        )
+
+        if (!response.ok) {
+          throw new Error('Failed to load products.')
+        }
+
+        const data = await response.json()
+
+        const productsWithImages = data.map((product) => ({
+          ...product,
+          image: productImages[product.image],
+        }))
+
+        setProducts(productsWithImages)
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          setError('Unable to load products. Please try again later.')
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadProducts()
+
+    return () => controller.abort()
+  }, [])
+
+  const categories = [
+    'All',
+    ...new Set(products.map((product) => product.category)),
+  ]
 
   const visibleProducts = useMemo(() => {
     if (activeCategory === 'All') {
@@ -86,7 +79,7 @@ function GiftShop({ cart, addToCart }) {
     return products.filter(
       (product) => product.category === activeCategory,
     )
-  }, [activeCategory])
+  }, [products, activeCategory])
 
   const cartTotal = cart.reduce(
     (total, product) => total + product.price * product.quantity,
@@ -146,6 +139,9 @@ function GiftShop({ cart, addToCart }) {
             </button>
           ))}
         </div>
+
+        {isLoading && <p>Loading products...</p>}
+        {error && <p role="alert">{error}</p>}
 
         <div className="shop-grid">
           {visibleProducts.map((product) => (

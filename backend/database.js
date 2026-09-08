@@ -63,6 +63,89 @@ insertAttraction.run({
 })
 
 db.exec(`
+  CREATE TABLE IF NOT EXISTS products (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL,
+    price REAL NOT NULL CHECK (price >= 0),
+    image TEXT NOT NULL
+  )
+`)
+
+const insertProduct = db.prepare(`
+  INSERT INTO products (
+    id, name, category, price, image
+  )
+  VALUES (
+    @id, @name, @category, @price, @image
+  )
+  ON CONFLICT(id) DO NOTHING
+`)
+
+const products = [
+  {
+    id: 1,
+    name: 'Sagrada Família Miniature',
+    category: 'Souvenirs',
+    price: 24,
+    image: 'sagrada-miniature.jpg',
+  },
+  {
+    id: 2,
+    name: 'Barcelona Postcard Set',
+    category: 'Souvenirs',
+    price: 9,
+    image: 'barcelona-postcard.jpg',
+  },
+  {
+    id: 3,
+    name: 'Illustrated Barcelona Map',
+    category: 'Art & Prints',
+    price: 16,
+    image: 'barcelona-map.jpg',
+  },
+  {
+    id: 4,
+    name: 'Barcelona Travel Poster',
+    category: 'Art & Prints',
+    price: 22,
+    image: 'barcelona-poster.jpg',
+  },
+  {
+    id: 5,
+    name: 'Barcelona Canvas Tote',
+    category: 'Accessories',
+    price: 18,
+    image: 'barcelona-tote.jpg',
+  },
+  {
+    id: 6,
+    name: 'Barcelona City T-Shirt',
+    category: 'Clothing',
+    price: 27,
+    image: 'barcelona-shirt.jpg',
+  },
+  {
+    id: 7,
+    name: 'Barcelona Hoodie',
+    category: 'Clothing',
+    price: 49,
+    image: 'barcelona-hoodie.jpg',
+  },
+  {
+    id: 8,
+    name: 'FC Barcelona Scarf',
+    category: 'Accessories',
+    price: 21,
+    image: 'barcelona-scarf.jpg',
+  },
+]
+
+for (const product of products) {
+  insertProduct.run(product)
+}
+
+db.exec(`
   CREATE TABLE IF NOT EXISTS tours (
     id INTEGER PRIMARY KEY,
     title TEXT NOT NULL,
