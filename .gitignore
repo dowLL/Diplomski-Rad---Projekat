@@ -1,0 +1,22 @@
+# Instalirani paketi
+node_modules/
+
+# Vite build
+dist/
+
+# Lokalne promenljive
+.env
+.env.*
+!.env.example
+
+# Log fajlovi
+*.log
+
+# Lokalna SQLite baza
+backend/*.db
+
+# Editor i operativni sistem
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
