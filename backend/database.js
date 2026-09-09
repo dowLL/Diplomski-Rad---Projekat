@@ -272,4 +272,59 @@ for (const tour of remainingTours) {
   })
 }
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS tour_bookings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tourId INTEGER NOT NULL,
+    preferredDate TEXT NOT NULL,
+    guests INTEGER NOT NULL CHECK (guests BETWEEN 1 AND 20),
+    fullName TEXT NOT NULL,
+    email TEXT NOT NULL,
+    message TEXT,
+    status TEXT NOT NULL DEFAULT 'pending',
+    createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (tourId) REFERENCES tours(id)
+  )
+`)
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    orderNumber TEXT NOT NULL UNIQUE,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    address TEXT NOT NULL,
+    city TEXT NOT NULL,
+    postalCode TEXT NOT NULL,
+    country TEXT NOT NULL,
+    note TEXT NOT NULL DEFAULT '',
+    deliveryMethod TEXT NOT NULL CHECK (
+      deliveryMethod IN ('standard', 'express', 'pickup')
+    ),
+    paymentMethod TEXT NOT NULL CHECK (
+      paymentMethod IN ('delivery', 'card')
+    ),
+    productsTotal REAL NOT NULL CHECK (productsTotal >= 0),
+    deliveryPrice REAL NOT NULL CHECK (deliveryPrice >= 0),
+    grandTotal REAL NOT NULL CHECK (grandTotal >= 0),
+    status TEXT NOT NULL DEFAULT 'pending',
+    createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )
+`)
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS order_items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    orderId INTEGER NOT NULL,
+    productId INTEGER NOT NULL,
+    productName TEXT NOT NULL,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    unitPrice REAL NOT NULL CHECK (unitPrice >= 0),
+    FOREIGN KEY (orderId) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (productId) REFERENCES products(id)
+  )
+`)
+
 module.exports = db

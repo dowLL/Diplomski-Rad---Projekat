@@ -13,11 +13,10 @@ function Checkout({ cart, clearCart }) {
   const [deliveryMethod, setDeliveryMethod] = useState('standard')
   const [paymentMethod, setPaymentMethod] = useState('delivery')
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const [orderTotal, setOrderTotal] = useState(0)
-
-  const [orderNumber] = useState(
-    () => `BCN-${Math.floor(100000 + Math.random() * 900000)}`,
-  )
+  const [orderNumber, setOrderNumber] = useState('')
 
   const totalItems = cart.reduce(
     (total, product) => total + product.quantity,
@@ -32,17 +31,62 @@ function Checkout({ cart, clearCart }) {
   const deliveryPrice = deliveryPrices[deliveryMethod]
   const grandTotal = productsTotal + deliveryPrice
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
-    setOrderTotal(grandTotal)
-    setIsSubmitted(true)
-    clearCart()
+    const formData = new FormData(event.currentTarget)
 
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    })
+    setIsSubmitting(true)
+    setSubmitError('')
+
+    try {
+      const response = await fetch(
+        'http://localhost:3000/api/orders',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            firstName: formData.get('firstName'),
+            lastName: formData.get('lastName'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            address: formData.get('address'),
+            city: formData.get('city'),
+            postalCode: formData.get('postalCode'),
+            country: formData.get('country'),
+            note: formData.get('note'),
+            deliveryMethod,
+            paymentMethod,
+            items: cart.map((product) => ({
+              productId: product.id,
+              quantity: product.quantity,
+            })),
+          }),
+        },
+      )
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Unable to save the order.')
+      }
+
+      setOrderNumber(data.order.orderNumber)
+      setOrderTotal(data.order.grandTotal)
+      setIsSubmitted(true)
+      clearCart()
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+    } catch (error) {
+      setSubmitError(error.message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (isSubmitted) {
@@ -400,8 +444,20 @@ function Checkout({ cart, clearCart }) {
             </span>
           </label>
 
-          <button className="checkout-submit" type="submit">
-            Confirm order · €{grandTotal.toFixed(2)}
+          {submitError && (
+            <p className="checkout-form__error" role="alert">
+              {submitError}
+            </p>
+          )}
+
+          <button
+            className="checkout-submit"
+            type="submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting
+              ? 'Saving order...'
+              : `Confirm order · €${grandTotal.toFixed(2)}`}
           </button>
         </form>
 

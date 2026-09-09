@@ -27,6 +27,8 @@ function Tours() {
   const [activeCategory, setActiveCategory] = useState('All Tours')
   const [selectedTour, setSelectedTour] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
   useEffect(() => {
     const controller = new AbortController()
@@ -86,9 +88,54 @@ function Tours() {
     })
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
-    setIsSubmitted(true)
+
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    const tour = tours.find((item) => item.title === selectedTour)
+
+    if (!tour) {
+      setSubmitError('Please select a valid tour.')
+      return
+    }
+
+    setIsSubmitting(true)
+    setIsSubmitted(false)
+    setSubmitError('')
+
+    try {
+      const response = await fetch(
+        'http://localhost:3000/api/bookings',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            tourId: tour.id,
+            preferredDate: formData.get('preferredDate'),
+            guests: Number(formData.get('guests')),
+            fullName: formData.get('fullName'),
+            email: formData.get('email'),
+            message: formData.get('message'),
+          }),
+        },
+      )
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Unable to save booking.')
+      }
+
+      setIsSubmitted(true)
+      form.reset()
+    } catch (error) {
+      setSubmitError(error.message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -301,12 +348,19 @@ function Tours() {
           <div className="booking-form__row">
             <label>
               Preferred date
-              <input type="date" required />
+              <input type="date" name="preferredDate" required />
             </label>
 
             <label>
               Number of guests
-              <input type="number" min="1" max="20" defaultValue="2" required />
+              <input
+                type="number"
+                name="guests"
+                min="1"
+                max="20"
+                defaultValue="2"
+                required
+              />
             </label>
           </div>
 
@@ -314,6 +368,7 @@ function Tours() {
             <label>
               Full name
               <input
+                name="fullName"
                 type="text"
                 placeholder="Your full name"
                 autoComplete="name"
@@ -324,6 +379,7 @@ function Tours() {
             <label>
               Email address
               <input
+                name="email"
                 type="email"
                 placeholder="you@example.com"
                 autoComplete="email"
@@ -335,6 +391,7 @@ function Tours() {
           <label>
             Additional message
             <textarea
+              name="message"
               rows="4"
               placeholder="Tell us if you have any questions or special requests."
             />
@@ -343,14 +400,22 @@ function Tours() {
           <button
             className="booking-form__button"
             type="submit"
-            disabled={isLoading || Boolean(error) || tours.length === 0}
+            disabled={
+              isLoading || isSubmitting || Boolean(error) || tours.length === 0
+            }
           >
-            Send booking request →
+            {isSubmitting ? 'Sending...' : 'Send booking request →'}
           </button>
+
+          {submitError && (
+            <p className="booking-form__error" role="alert">
+              {submitError}
+            </p>
+          )}
 
           {isSubmitted && (
             <p className="booking-form__success" role="status">
-              Thank you! Your request for “{selectedTour}” has been recorded.
+              Thank you! Your request for “{selectedTour}” has been saved.
             </p>
           )}
         </form>
