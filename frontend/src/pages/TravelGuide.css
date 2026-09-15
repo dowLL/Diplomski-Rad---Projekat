@@ -460,3 +460,8 @@
     padding: 65px 6%;
   }
 }
+.getting-around,
+.visit-season,
+.tickets-section {
+  scroll-margin-top: 110px;
+}

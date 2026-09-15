@@ -173,7 +173,7 @@ function TravelGuide() {
         </div>
       </section>
 
-      <section className="getting-around">
+      <section className="getting-around" id="getting-around">
         <div className="getting-around__intro">
           <p className="guide-eyebrow">GETTING AROUND</p>
           <h2>Move through the city with ease.</h2>
@@ -198,7 +198,7 @@ function TravelGuide() {
         </div>
       </section>
 
-      <section className="visit-season">
+      <section className="visit-season" id="best-time-to-visit">
         <div className="guide-section-heading">
           <div>
             <p className="guide-eyebrow">WHEN TO VISIT</p>
@@ -286,7 +286,7 @@ function TravelGuide() {
         </div>
       </section>
 
-      <section className="tickets-section">
+      <section className="tickets-section" id="tickets-reservations">
         <div>
           <p className="guide-eyebrow">TICKETS & RESERVATIONS</p>
           <h2>Plan ahead. Spend more time exploring.</h2>

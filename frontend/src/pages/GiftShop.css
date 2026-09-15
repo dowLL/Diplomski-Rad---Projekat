@@ -229,8 +229,13 @@
   transition: 0.25s ease;
 }
 
-.product-card > button:hover {
+.product-card > button:hover:not(:disabled) {
   background-color: #b45132;
+}
+
+.product-card > button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .shop-message {

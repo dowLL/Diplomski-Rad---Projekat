@@ -91,6 +91,7 @@ function GiftShopCart({
                   <button
                     type="button"
                     aria-label={`Increase quantity of ${product.name}`}
+                    disabled={product.quantity >= 99}
                     onClick={() =>
                       updateQuantity(product.id, product.quantity + 1)
                     }
@@ -117,7 +118,7 @@ function GiftShopCart({
 
         <aside className="cart-summary">
           <p className="cart-eyebrow">ORDER SUMMARY</p>
-          <h2>Your total</h2>
+          <h2>Order summary</h2>
 
           <div className="cart-summary__row">
             <span>Products ({totalItems})</span>
@@ -126,11 +127,11 @@ function GiftShopCart({
 
           <div className="cart-summary__row">
             <span>Delivery</span>
-            <strong>Free</strong>
+            <strong>At checkout</strong>
           </div>
 
           <div className="cart-summary__total">
-            <span>Total</span>
+            <span>Subtotal</span>
             <strong>€{totalPrice.toFixed(2)}</strong>
           </div>
 
@@ -139,7 +140,8 @@ function GiftShopCart({
           </Link>
 
           <p className="cart-summary__note">
-            Checkout will be connected in the next development phase.
+            Choose your delivery method at checkout. Standard delivery is
+            €4.90, express delivery is €9.90, and store pickup is free.
           </p>
         </aside>
       </section>

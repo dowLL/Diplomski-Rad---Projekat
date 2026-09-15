@@ -160,8 +160,14 @@ function GiftShop({ cart, addToCart }) {
                 <strong>€{product.price.toFixed(2)}</strong>
               </div>
 
-              <button type="button" onClick={() => addToCart(product)}>
-                Add to bag +
+              <button
+                type="button"
+                onClick={() => addToCart(product)}
+                disabled={cart.some((item) => item.id === product.id && item.quantity >= 99)}
+              >
+                {cart.some((item) => item.id === product.id && item.quantity >= 99)
+                  ? 'Limit reached (99)'
+                  : 'Add to bag +'}
               </button>
             </article>
           ))}

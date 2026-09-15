@@ -34,9 +34,11 @@ function Footer() {
 
           <nav aria-label="Plan your visit">
             <Link to="/guide">Travel guide</Link>
-            <Link to="/guide">Getting around</Link>
-            <Link to="/guide">Best time to visit</Link>
-            <Link to="/guide">Tickets &amp; reservations</Link>
+            <Link to="/guide#getting-around">Getting around</Link>
+            <Link to="/guide#best-time-to-visit">Best time to visit</Link>
+            <Link to="/guide#tickets-reservations">
+              Tickets &amp; reservations
+            </Link>
           </nav>
         </div>
 

@@ -20,3 +20,6 @@ backend/*.db
 .idea/
 .DS_Store
 Thumbs.db
+
+# Privremeni rezultati provera
+.codex-review-v2/

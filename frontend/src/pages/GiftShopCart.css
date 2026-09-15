@@ -139,8 +139,13 @@
   cursor: pointer;
 }
 
-.cart-item__quantity button:hover {
+.cart-item__quantity button:hover:not(:disabled) {
   background-color: #f3b93f;
+}
+
+.cart-item__quantity button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .cart-item__quantity strong {

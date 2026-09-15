@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -11,13 +11,43 @@ import TravelGuide from './pages/TravelGuide'
 import GiftShop from './pages/GiftShop'
 import GiftShopCart from './pages/GiftShopCart'
 import Checkout from './pages/Checkout'
+import Admin from './pages/Admin'
+import NotFound from './pages/NotFound'
+
+function ScrollToHash() {
+  const { hash, key } = useLocation()
+
+  useEffect(() => {
+    if (!hash) {
+      return undefined
+    }
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      const sectionId = decodeURIComponent(hash.slice(1))
+
+      document.getElementById(sectionId)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    })
+
+    return () => window.cancelAnimationFrame(animationFrame)
+  }, [hash, key])
+
+  return null
+}
 
 function App() {
   const [cart, setCart] = useState(() => {
     try {
       const savedCart = localStorage.getItem('barcelona-cart')
 
-      return savedCart ? JSON.parse(savedCart) : []
+      const storedCart = savedCart ? JSON.parse(savedCart) : []
+
+      return storedCart.map((product) => ({
+        ...product,
+        quantity: Math.min(product.quantity, 99),
+      }))
     } catch {
       return []
     }
@@ -36,7 +66,7 @@ function App() {
       if (existingProduct) {
         return currentCart.map((cartProduct) =>
           cartProduct.id === product.id
-            ? { ...cartProduct, quantity: cartProduct.quantity + 1 }
+            ? { ...cartProduct, quantity: Math.min(cartProduct.quantity + 1, 99) }
             : cartProduct,
         )
       }
@@ -54,7 +84,7 @@ function App() {
     setCart((currentCart) =>
       currentCart.map((product) =>
         product.id === productId
-          ? { ...product, quantity: newQuantity }
+          ? { ...product, quantity: Math.min(newQuantity, 99) }
           : product,
       ),
     )
@@ -77,6 +107,7 @@ function App() {
 
   return (
     <>
+      <ScrollToHash />
       <Navbar cartCount={cartCount} />
 
       <Routes>
@@ -103,6 +134,8 @@ function App() {
           path="/checkout"
           element={<Checkout cart={cart} clearCart={clearCart} />}
         />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       <Footer />

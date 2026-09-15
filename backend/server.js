@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require('express')
 const cors = require('cors')
 const db = require('./database')
@@ -6,8 +8,46 @@ const { randomUUID } = require('node:crypto')
 const app = express()
 const PORT = 3000
 
+const adminToken = randomUUID()
+
 app.use(cors())
 app.use(express.json())
+
+function requireAdmin(req, res, next) {
+  const authorization = req.get('Authorization')
+
+  if (authorization !== `Bearer ${adminToken}`) {
+    return res.status(401).json({
+      message: 'Administratorska prijava je obavezna.',
+    })
+  }
+
+  next()
+}
+
+app.post('/api/admin/login', (req, res) => {
+  const { email, password } = req.body
+
+  if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+    return res.status(500).json({
+      message: 'Administratorski podaci nisu podešeni.',
+    })
+  }
+
+  if (
+    email !== process.env.ADMIN_EMAIL ||
+    password !== process.env.ADMIN_PASSWORD
+  ) {
+    return res.status(401).json({
+      message: 'Email ili lozinka nisu ispravni.',
+    })
+  }
+
+  return res.json({
+    message: 'Prijava je uspešna.',
+    token: adminToken,
+  })
+})
 
 app.get('/api/health', (req, res) => {
   res.json({ message: 'Backend radi!' })
@@ -313,6 +353,50 @@ app.post('/api/orders', (req, res) => {
       message: 'Došlo je do greške prilikom čuvanja porudžbine.',
     })
   }
+})
+
+app.get('/api/admin/bookings', requireAdmin, (req, res) => {
+  const bookings = db
+    .prepare(`
+      SELECT
+        tour_bookings.*,
+        tours.title AS tourTitle
+      FROM tour_bookings
+      JOIN tours ON tours.id = tour_bookings.tourId
+      ORDER BY tour_bookings.id ASC
+    `)
+    .all()
+
+  res.json(bookings)
+})
+
+app.get('/api/admin/orders', requireAdmin, (req, res) => {
+  const orders = db
+    .prepare(`
+      SELECT *
+      FROM orders
+      ORDER BY id ASC
+    `)
+    .all()
+
+  const getOrderItems = db.prepare(`
+    SELECT
+      id,
+      productId,
+      productName,
+      quantity,
+      unitPrice
+    FROM order_items
+    WHERE orderId = ?
+    ORDER BY id
+  `)
+
+  const ordersWithItems = orders.map((order) => ({
+    ...order,
+    items: getOrderItems.all(order.id),
+  }))
+
+  res.json(ordersWithItems)
 })
 
 app.listen(PORT, () => {
