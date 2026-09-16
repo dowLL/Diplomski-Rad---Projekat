@@ -375,7 +375,6 @@
 }
 
 .bus-feature {
-  min-height: 720px;
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   color: #ffffff;
@@ -383,18 +382,22 @@
 }
 
 .bus-feature__image {
-  min-height: 720px;
+  position: relative;
+  min-height: 0;
   overflow: hidden;
 }
 
 .bus-feature__image img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 92.5%;
 }
 
 .bus-feature__content {
-  padding: 6rem clamp(2rem, 6vw, 6rem);
+  padding: 3rem clamp(2rem, 6vw, 6rem);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -598,7 +601,7 @@
   }
 
   .bus-feature__image {
-    min-height: 480px;
+    aspect-ratio: 16 / 9;
   }
 
   .booking-section {
@@ -644,12 +647,8 @@
     width: 100%;
   }
 
-  .bus-feature__image {
-    min-height: 360px;
-  }
-
   .bus-feature__content {
-    padding: 4.5rem 1.5rem;
+    padding: 2.5rem 1.5rem;
   }
 
   .booking-section {

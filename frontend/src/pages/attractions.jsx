@@ -6,13 +6,14 @@ import sagradaImage from '../assets/images/sagrada-familia.jpg'
 import parkGuellImage from '../assets/images/park-guell.jpg'
 import gothicQuarterImage from '../assets/images/gothic-quarter.jpg'
 import campNouImage from '../assets/images/camp-nou.jpg'
+import viewpointsImage from '../assets/images/barcelona-viewpoints-carmel.jpg'
 import './Attractions.css'
 
 const attractionImages = {
   'sagrada-familia.jpg': sagradaImage,
   'park-guell.jpg': parkGuellImage,
   'gothic-quarter.jpg': gothicQuarterImage,
-  'attractions-hero.jpg': heroImage,
+  'attractions-hero.jpg': viewpointsImage,
 }
 
 function Attractions() {

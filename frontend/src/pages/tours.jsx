@@ -1,21 +1,25 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import heroImage from '../assets/images/barcelona-tour.jpg'
-import busImage from '../assets/images/barcelona-hero.jpg'
-import gaudiImage from '../assets/images/sagrada-familia.jpg'
-import parkImage from '../assets/images/park-guell.jpg'
-import gothicImage from '../assets/images/gothic-quarter.jpg'
-import coastImage from '../assets/images/attractions-hero.jpg'
+import busImage from '../assets/images/tour-hop-on-hop-off.jpg'
+import gaudiImage from '../assets/images/tour-gaudi-interior.jpg'
+import parkImage from '../assets/images/tour-park-guell-mosaic.jpg'
+import gothicImage from '../assets/images/tour-gothic-quarter-alley.jpg'
 
 import './Tours.css'
 
+// API image names remain stable; each tour uses its own local photo.
 const tourImages = {
   'barcelona-hero.jpg': busImage,
   'sagrada-familia.jpg': gaudiImage,
   'park-guell.jpg': parkImage,
   'gothic-quarter.jpg': gothicImage,
-  'attractions-hero.jpg': coastImage,
-  'barcelona-tour.jpg': heroImage,
+}
+
+const tourImagePositions = {
+  'barcelona-hero.jpg': 'center 95%',
+  'park-guell.jpg': 'center 60%',
+  'gothic-quarter.jpg': 'center 65%',
 }
 
 
@@ -64,18 +68,20 @@ function Tours() {
     return () => controller.abort()
   }, [])
 
+  const cardTours = tours.filter((tour) => [1, 2, 3, 4].includes(tour.id))
+
   const categories = [
     'All Tours',
-    ...new Set(tours.map(({ category }) => category)),
+    ...new Set(cardTours.map(({ category }) => category)),
   ]
 
   const filteredTours = useMemo(() => {
     if (activeCategory === 'All Tours') {
-      return tours
+      return cardTours
     }
 
-    return tours.filter(({ category }) => category === activeCategory)
-  }, [tours, activeCategory])  
+    return cardTours.filter(({ category }) => category === activeCategory)
+  }, [cardTours, activeCategory])
 
   function openBooking(tourTitle) {
     setSelectedTour(tourTitle)
@@ -206,7 +212,11 @@ function Tours() {
               key={tour.id}
             >
               <div className="tour-card__image">
-                <img src={tourImages[tour.image]} alt={tour.title} />
+                <img
+                  src={tourImages[tour.image]}
+                  alt={tour.title}
+                  style={{ objectPosition: tourImagePositions[tour.image] || 'center' }}
+                />
 
                 {tour.featured && (
                   <span className="tour-card__badge">MOST POPULAR</span>
