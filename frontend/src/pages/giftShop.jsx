@@ -22,6 +22,13 @@ const productImages = {
   'barcelona-scarf.jpg': scarfImage,
 }
 
+const productImageStyles = {
+  'sagrada-miniature.jpg': {
+    objectFit: 'cover',
+    objectPosition: 'center 58%',
+  },
+}
+
 function GiftShop({ cart, addToCart }) {
   const [products, setProducts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -47,6 +54,7 @@ function GiftShop({ cart, addToCart }) {
         const productsWithImages = data.map((product) => ({
           ...product,
           image: productImages[product.image],
+          imageStyle: productImageStyles[product.image],
         }))
 
         setProducts(productsWithImages)
@@ -147,7 +155,12 @@ function GiftShop({ cart, addToCart }) {
           {visibleProducts.map((product) => (
             <article className="product-card" key={product.id}>
               <div className="product-card__image">
-                <img src={product.image} alt={product.name} loading="lazy" />
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  loading="lazy"
+                  style={product.imageStyle}
+                />
                 <span>{product.category}</span>
               </div>
 
